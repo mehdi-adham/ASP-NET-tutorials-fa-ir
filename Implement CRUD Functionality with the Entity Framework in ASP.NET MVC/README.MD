@@ -1,6 +1,16 @@
 
-<style>@font-face{font-family: 'Sahel';font-style: normal;font-weight: normal;src:url('/ASP-NET-tutorials-fa-ir/fonts/Sahel.ttf');}*{font-family: Sahel;}</style>
-
+<style>
+@font-face {
+    font-family: 'Sahel';
+    font-style: normal;
+    font-weight: normal;
+    src:url(/ASP-NET-tutorials-fa-ir/fonts/Sahel.ttf);
+    }
+    * {
+        font-family: Sahel;
+        }
+</style>
+<div style="font-family: Sahel;">
 # پیاده سازی عملیات CRUD با Entity Framework در ASP.NET MVC  
 
 
@@ -205,3 +215,4 @@ protected override void Dispose(bool disposing)
 
 
 اکنون مجموعه کاملی از صفحات دارید که عملیات ساده CRUD را برای Student_entities انجام می دهند. شما از MVC _helpers برای تولید عناصر UI برای فیلدهای داده استفاده کردید.
+</div>
