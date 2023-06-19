@@ -49,7 +49,7 @@ public ActionResult Details(int? id)
 مقدار کلید به عنوان پارامتر id به متد ارسال می شود و از route data در لینک Details در صفحه Index می آید.
 
 
-## نکته: Route data
+**نکته: Route data**
 <p dir="rtl">
 Route data داده‌ای است که model binder در بخش URL مشخص شده در جدول  routing یافت می‌شود. به عنوان مثال، default route بخش های controller، action و id را مشخص می کند:
 نکته: Route_data
@@ -97,7 +97,71 @@ routes.MapRoute(
 <a href="/Select/Index/?courseID=@item.CourseID">Select</a>
 ```
 
-## ایجاد صفحه Details
+## برای ایجاد صفحه Details
+
+1. Views\Student\Details.cshtml را باز کنید.
+
+همانطور که در مثال زیر نشان داده شده است، هر فیلد با استفاده از یک Helper `DisplayFor` نمایش داده می شود:
+
+```C#
+
+<dt>
+    @Html.DisplayNameFor(model => model.LastName)
+</dt>
+<dd>
+    @Html.DisplayFor(model => model.LastName)
+</dd>
+```
+
+2. پس از قسمت EnrollmentDate و بلافاصله قبل از بسته شدن تگ </dl>، کدی که در زیر نشان داده شده است را اضافه کنید تا لیستی از ثبت نام ها نمایش داده شود
+
+```C#
+<dt>
+            @Html.DisplayNameFor(model => model.EnrollmentDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnrollmentDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enrollments)
+        </dt>
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>Course Title</th>
+                    <th>Grade</th>
+                </tr>
+                @foreach (var item in Model.Enrollments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Course.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Grade)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+```
+
+اگر پس از کپی کردن کد، code indentation اشتباه است، Ctrl+K، Ctrl+D را فشار دهید تا آن را فرمت کند.
+
+3. Open the Details page with the starting program (Ctrl+F5), select the Students tab, and then click the Details link for Alexander Carson. (If you press Ctrl+F5 while the Details.cshtml file is open, you'll get an HTTP 400 error. This is because Visual Studio is trying to run the Details page, but from the link that the student specified for display was not accessed. If this happens, remove "Student/Details" from the URL and try again, or close the browser, right-click the project, and select View > View in Browser click.)
+
+لیست دروس و نمرات دانش آموزان منتخب را مشاهده می کنید.
+
+4. مرورگر را ببندید.
 
 
 ## آپدیت صفحه Create 
