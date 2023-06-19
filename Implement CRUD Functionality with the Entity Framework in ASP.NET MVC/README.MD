@@ -165,6 +165,64 @@ routes.MapRoute(
 
 ## آپدیت صفحه Create 
 
+در Controllers\StudentController.cs، اکشن متد HttpPostAttribute Create را با کد زیر جایگزین کنید. این کد یک بلوک try-catch اضافه می کند و شناسه را از ویژگی BindAttribute برای متد scaffolded حذف می کند
+
+```C#
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Create([Bind(Include = "LastName, FirstMidName, EnrollmentDate")]Student student)
+{
+    try
+    {
+        if (ModelState.IsValid)
+        {
+            db.Students.Add(student);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+    }
+    catch (DataException /* dex */)
+    {
+        //Log the error (uncomment dex variable name and add a line here to write a log.
+        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+    }
+    return View(student);
+}
+```
+
+این کد موجودیت `Student` ایجاد شده توسط  مدل بایندر ASP.NET MVC را به مجموعه موجودیت `Students` اضافه می کند و سپس تغییرات را در پایگاه داده ذخیره می کند.
+مدل بایندر به عملکرد ASP.NET MVC اشاره دارد که کار با داده های ارسال شده توسط یک فرم را برای شما آسان تر می کند. یک مدل بایندر مقادیر فرم ارسال شده را به CLR تایپ تبدیل می کند و آنها را در پارامترها به مدل بایندر ارسال می کند.
+در این مورد، مدل بایندر یک موجودیت `Student` را با استفاده از مقادیر ویژگی از `فرم` کالکشن نمونه سازی می کند.
+
+شناسه `ID` را از ویژگی Bind حذف کردید زیرا `ID` مقدار کلید اصلی است که SQL Server به صورت خودکار هنگام درج ردیف تنظیم می کند. ورودی کاربر مقدار `ID` را تعیین نمی کند.
+
+
+**هشدار امنیتی** - ویژگی `ValidateAntiForgeryToken` به جلوگیری از حملات جعل درخواست cross-site کمک می کند. به یک عبارت `Html.AntiForgeryToken()` مربوطه در view نیاز دارد که بعداً خواهید دید.
+
+ویژگی Bind یکی از راه‌های محافظت در برابر over_posting در سناریوهای Create است. برای مثال، فرض کنید موجودیت Student شامل یک ویژگی Secret است که نمی‌خواهید دراین صفحه آن را ست کنید.
+
+```C#
+public class Student
+{
+    public int ID { get; set; }
+    public string LastName { get; set; }
+    public string FirstMidName { get; set; }
+    public DateTime EnrollmentDate { get; set; }
+    public string Secret { get; set; }
+
+    public virtual ICollection<Enrollment> Enrollments { get; set; }
+}
+```
+
+حتی اگر یک فیلد `Secret` در صفحه وب ندارید، یک هکر می تواند از ابزاری مانند  fiddler یا نوشتن مقداری کد جاوا اسکریپت برای ارسال مقدار فرم `Secret` استفاده کند.
+بدون اینکه ویژگی BindAttribute فیلدهایی را که مدل بایندر هنگام ایجاد یک نمونه `Student` استفاده می کند محدود کند، مدل بایندر آن مقدار فرم `Secret` را انتخاب کرده و از آن برای ایجاد نمونه موجودیت `Student` استفاده می کند.
+سپس هر مقداری که هکر برای فیلد فرم `Secret` مشخص کرده باشد در پایگاه داده شما به روز می شود. تصویر زیر ابزار fiddler را نشان می دهد که فیلد `Secret` (با مقدار "OverPost") را به مقادیر فرم ارسال شده اضافه می کند.
+
+![fiddler image](image5.png)
+
+سپس مقدار "OverPost" با موفقیت به ویژگی `Secret` ردیف درج شده اضافه می شود، اگرچه هرگز قصد نداشتید که صفحه وب بتواند آن ویژگی را ست کند.
+
+
 
 ## آپدیت متد HttpPost Edit
 
@@ -193,7 +251,7 @@ protected override void Dispose(bool disposing)
 کلاس base `Controller` از قبل رابط `IDisposable` را پیاده‌سازی می‌کند، بنابراین این کد به سادگی یک override به متد `Dispose(bool)` اضافه می کند تا حتما آن را از Context instance حذف کند.
 
 
-## هندل کردن تراکنشش ها
+## هندل کردن تراکنش ها
 
 به طور پیش فرض Entity Framework به طور ضمنی تراکنش ها را پیاده سازی می کند. در سناریوهایی که در چندین ردیف یا جدول تغییراتی ایجاد می‌کنید و سپس `SaveChanges` را فراخوانی می‌کنید، Entity Framework به‌طور خودکار مطمئن می‌شود که یا همه تغییرات شما موفقیت‌آمیز هستند یا همه ناموفق هستند.
 اگر ابتدا برخی تغییرات انجام شود و سپس خطایی رخ دهد، آن تغییرات به طور خودکار برگردانده می شوند.
