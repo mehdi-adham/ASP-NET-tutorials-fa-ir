@@ -1,5 +1,6 @@
-
-<style>
+ <link rel="stylesheet" type="text/css" hs-webfonts="true" href="http://yaas.techforall.ir/fonts/Sahel.ttf">
+ 
+<style type="text/css">
 @font-face {
     font-family: 'Sahel';
     font-style: normal;
@@ -11,7 +12,7 @@
         }
 </style>
 
-<div style="font-family: 'Sahel';font-style: normal;font-weight: normal;src:url(/Sahel.ttf)">
+<div style="font-family: 'Sahel';">
 
 # پیاده سازی عملیات CRUD با Entity Framework در ASP.NET MVC  
 
