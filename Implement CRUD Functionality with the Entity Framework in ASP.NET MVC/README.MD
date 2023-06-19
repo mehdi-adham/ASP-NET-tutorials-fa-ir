@@ -165,7 +165,7 @@ routes.MapRoute(
 
 ## آپدیت صفحه Create 
 
-در Controllers\StudentController.cs، اکشن متد با ویژگی HttpPost Create را با کد زیر جایگزین کنید. این کد یک بلوک try-catch اضافه می کند و شناسه را از ویژگی BindAttribute برای متد scaffolded حذف می کند
+در Controllers\StudentController.cs، اکشن متد Create با ویژگی HttpPost  را با کد زیر جایگزین کنید. این کد یک بلوک try-catch اضافه می کند و شناسه را از ویژگی BindAttribute برای متد scaffolded حذف می کند
 
 ```C#
 [HttpPost]
