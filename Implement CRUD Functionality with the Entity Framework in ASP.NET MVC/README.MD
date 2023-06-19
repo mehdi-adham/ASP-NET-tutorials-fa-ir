@@ -4,13 +4,14 @@
     font-family: 'Sahel';
     font-style: normal;
     font-weight: normal;
-    src:url(/ASP-NET-tutorials-fa-ir/fonts/Sahel.ttf);
+    src:url(/Sahel.ttf);
     }
     * {
         font-family: Sahel;
         }
 </style>
-<div style="font-family: Sahel;">
+
+<div style="font-family: 'Sahel';font-style: normal;font-weight: normal;src:url(/Sahel.ttf)">
 
 # پیاده سازی عملیات CRUD با Entity Framework در ASP.NET MVC  
 
