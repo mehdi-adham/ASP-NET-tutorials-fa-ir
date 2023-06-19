@@ -1,7 +1,7 @@
 # پیاده سازی عملیات CRUD با Entity Framework در ASP.NET MVC  
 
 
-در این آموزش، کدهای CREATE ، READ ،UPDATE ، DELTE (CRUD) را که MVC scaffolding به طور خودکار در کنترلرها و viewها ایجاد می کنیم، بررسی و سفارشی می کنید.
+در این آموزش، کدهای CREATE ، READ ،UPDATE ، DELTE (CRUD) را که MVC scaffolding به طور خودکار در کنترلرها و viewها ایجاد می کند، بررسی و سفارشی می کنیم.
 
 
  اینجا نمونه هایی از صفحات وب که ایجاد می کنید آورده شده است:
