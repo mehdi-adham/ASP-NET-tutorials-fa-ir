@@ -99,9 +99,9 @@ routes.MapRoute(
 
 ## برای ایجاد صفحه Details
 
-1. Views\Student\Details.cshtml را باز کنید.
+1. فایل Views\Student\Details.cshtml را باز کنید.
 
-همانطور که در مثال زیر نشان داده شده است، هر فیلد با استفاده از یک Helper `DisplayFor` نمایش داده می شود:
+همانطور که در مثال زیر نشان داده شده است، هر فیلد با استفاده از یک `DisplayFor` Helper نمایش داده می شود:
 
 ```C#
 
@@ -113,7 +113,7 @@ routes.MapRoute(
 </dd>
 ```
 
-2. پس از قسمت EnrollmentDate و بلافاصله قبل از بسته شدن تگ </dl>، کدی که در زیر نشان داده شده است را اضافه کنید تا لیستی از ثبت نام ها نمایش داده شود
+2. پس از قسمت `EnrollmentDate `و بلافاصله قبل از بسته شدن تگ `</dl>`، کدی که در زیر نشان داده شده است را اضافه کنید تا لیستی از ثبت نام ها نمایش داده شود
 
 ```C#
 <dt>
@@ -157,7 +157,7 @@ routes.MapRoute(
 
 اگر پس از کپی کردن کد، code indentation اشتباه است، Ctrl+K، Ctrl+D را فشار دهید تا آن را فرمت کند.
 
-3. Open the Details page with the starting program (Ctrl+F5), select the Students tab, and then click the Details link for Alexander Carson. (If you press Ctrl+F5 while the Details.cshtml file is open, you'll get an HTTP 400 error. This is because Visual Studio is trying to run the Details page, but from the link that the student specified for display was not accessed. If this happens, remove "Student/Details" from the URL and try again, or close the browser, right-click the project, and select View > View in Browser click.)
+3. صفحه Details را با starting program (Ctrl+F5) باز کنید، تب Students را انتخاب کنید و سپس روی پیوند Details برای Alexander Carson کلیک کنید. (اگر Ctrl+F5 را فشار دهید در حالی که فایل Details.cshtml باز است، با خطای HTTP 400 مواجه خواهید شد. این به این دلیل است که ویژوال استودیو سعی می کند صفحه جزئیات را اجرا کند، اما از پیوندی که دانش آموز برای نمایش مشخص شده است دسترسی پیدا نکرده است. اگر این اتفاق افتاد، «Student/Details» را از URL حذف کنید و دوباره امتحان کنید، یا مرورگر را ببندید، روی پروژه کلیک راست کرده و View > View را در کلیک مرورگر انتخاب کنید.)
 
 لیست دروس و نمرات دانش آموزان منتخب را مشاهده می کنید.
 
