@@ -82,5 +82,44 @@ routes.MapRoute(
 <a href="/Select/Index/?courseID=@item.CourseID">Select</a>
 ```
 
-## برای ایجاد صفحه Details
+## ایجاد صفحه Details
 
+
+## آپدیت صفحه Create 
+
+
+## آپدیت متد HttpPost Edit
+
+
+## آپدیت صفحه Delete 
+
+
+
+## بستن کانکشن دیتابیس
+
+برای بستن اتصالات پایگاه داده و آزاد کردن منابعی که در اختیار دارند در اسرع وقت، پس از اتمام کار context instance را از بین ببرید.
+به همین دلیل است که کد scaffolded یک متد Dispose را در انتهای کلاس `StudentController` در StudentController.cs ارائه می دهد، همانطور که در مثال زیر نشان داده شده است:
+
+```C#
+
+protected override void Dispose(bool disposing)
+{
+    if (disposing)
+    {
+        db.Dispose();
+    }
+    base.Dispose(disposing);
+}
+```
+
+کلاس base `Controller` از قبل رابط `IDisposable` را پیاده‌سازی می‌کند، بنابراین این کد به سادگی یک override به متد `Dispose(bool)` اضافه می کند تا حتما آن را از Context instance حذف کند.
+
+
+## هندل کردن تراکنشش ها
+
+به طور پیش فرض Entity Framework به طور ضمنی تراکنش ها را پیاده سازی می کند. در سناریوهایی که در چندین ردیف یا جدول تغییراتی ایجاد می‌کنید و سپس `SaveChanges` را فراخوانی می‌کنید، Entity Framework به‌طور خودکار مطمئن می‌شود که یا همه تغییرات شما موفقیت‌آمیز هستند یا همه ناموفق هستند.
+اگر ابتدا برخی تغییرات انجام شود و سپس خطایی رخ دهد، آن تغییرات به طور خودکار برگردانده می شوند.
+
+
+
+اکنون مجموعه کاملی از صفحات دارید که عملیات ساده CRUD را برای Student_entities انجام می دهند. شما از MVC _helpers برای تولید عناصر UI برای فیلدهای داده استفاده کردید.
