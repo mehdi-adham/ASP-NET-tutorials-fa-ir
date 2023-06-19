@@ -1,16 +1,5 @@
- <link rel="stylesheet" type="text/css" hs-webfonts="true" href="http://yaas.techforall.ir/fonts/Sahel.ttf">
- 
-<style type="text/css">
-@font-face {
-    font-family: 'Sahel';
-    font-style: normal;
-    font-weight: normal;
-    src:url(/Sahel.ttf);
-    }
-    * {
-        font-family: Sahel;
-        }
-</style>
+ <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://github.com/mehdi-adham/ASP-NET-tutorials-fa-ir/tree/main/fonts/Sahel.ttf">
+
 
 <div style="font-family: 'Sahel';">
 
