@@ -1,10 +1,8 @@
- <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://github.com/mehdi-adham/ASP-NET-tutorials-fa-ir/tree/main/fonts/Sahel.ttf">
+<link href="https://github.com/mehdi-adham/ASP-NET-tutorials-fa-ir/tree/main/css/README.css" rel="stylesheet" />
 
-
-<div style="font-family: 'Sahel';">
+<div id="sec" style="font-family: 'Sahel';">
 
 # پیاده سازی عملیات CRUD با Entity Framework در ASP.NET MVC  
-
 
 در این آموزش، کدهای CREATE ، READ ،UPDATE ، DELTE (CRUD) را که MVC scaffolding به طور خودکار در کنترلرها و viewها ایجاد می کند، بررسی و سفارشی می کنیم.
 

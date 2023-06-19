@@ -1,0 +1,10 @@
+@font-face {
+  font-family: "Sahel";
+  font-style: normal;
+  font-weight: normal;
+  src: url(https://github.com/mehdi-adham/ASP-NET-tutorials-fa-ir/tree/main/fonts/Sahel.ttf) format("truetype");
+}
+
+#sec {
+  font-family: "Sahel";
+}
