@@ -143,9 +143,13 @@
 
 ## نصب فریموورک Entity Framework 6 
 
-1. از منوی **Tools**، **NuGet Package Manager** و سپس **Package Manager Console** را انتخاب کنید.
+1. ا
 
-2. در پنجره **Package Manager Console** دستور زیر را وارد کنید:
+از منوی **Tools**، **NuGet Package Manager** و سپس **Package Manager Console** را انتخاب کنید.
+
+2. ا
+
+در پنجره **Package Manager Console** دستور زیر را وارد کنید:
 
 
 ```text
