@@ -342,10 +342,91 @@ public ActionResult EditPost(int? id)
 
 ## آپدیت صفحه Delete 
 
-در Controllers\StudentController.cs، کد الگو برای روش  `Delete` فبا ویژگی HttpGetAttribute از متد `Find` برای یافتن موجودیت دانشجوی انتخاب شده استفاده می کند، همانطور که در متدهای  `Details` و `Edit` مشاهده کردید. با این حال، برای پیاده سازی یک پیام خطای سفارشی زمانی که فراخوانی `SaveChanges` با شکست مواجه می شود، برخی از قابلیت ها را به این متد و  view مربوطه آن اضافه می کنیم.
+در Controllers\StudentController.cs، کد الگو برای روش  `Delete` با ویژگی HttpGetAttribute از متد `Find` برای یافتن موجودیت دانشجوی انتخاب شده استفاده می کند، همانطور که در متدهای  `Details` و `Edit` مشاهده کردید. با این حال، برای پیاده سازی یک پیام خطای سفارشی زمانی که فراخوانی `SaveChanges` با شکست مواجه می شود، برخی از قابلیت ها را به این متد و  view مربوطه آن اضافه می کنیم.
+
+همانطور که برای عملیات update و create دیدید، عملیات delete به دو متد اکشن نیاز دارد. متدی که در پاسخ به درخواست GET فراخوانی می شود، یک view را نمایش می دهد که به کاربر این فرصت را می دهد تا عملیات delete را تایید یا لغو کند. اگر کاربر آن را تایید کند، یک درخواست  POST ایجاد می شود. هنگامی که این اتفاق می افتد، متد  `Delete` با ویژگی `HttpPost` فراخوانی می شود و سپس آن متد در واقع عملیات delete را انجام می دهد.
+
+شما یک بلوک `try-catch` را با متد  `Delete` با ویژگی HttpPost اضافه می‌کنید تا خطاهایی را که ممکن است هنگام به‌روزرسانی پایگاه داده رخ دهد، مدیریت کنید. اگر خطایی رخ دهد، متد   `Delete` با ویژگی HttpPost متد  `Delete` با ویژگی HttpGet را فراخوانی می کند و پارامتری را به آن ارسال می کند که نشان می دهد خطا رخ داده است. سپس متد `Delete` با وِیژگی HttpGet  صفحه تایید را به همراه پیام خطا دوباره نمایش می دهد و به کاربر فرصتی می دهد تا لغو کند یا دوباره امتحان کند.
+
+1. متد اکشن Delete با ویژگی HttpGet را با کد زیر جایگزین کنید، که گزارش خطا را مدیریت می کند:
+
+```C#
+
+public ActionResult Delete(int? id, bool? saveChangesError=false)
+{
+    if (id == null)
+    {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+    }
+    if (saveChangesError.GetValueOrDefault())
+    {
+        ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+    }
+    Student student = db.Students.Find(id);
+    if (student == null)
+    {
+        return HttpNotFound();
+    }
+    return View(student);
+}
+```
+
+این کد یک پارامتر اختیاری را می پذیرد که نشان می دهد آیا متد  فراخوانی شده پس از عدم موفقیت در ذخیره تغییرات بوده است یا خیر. هنگامی که متد  `Delete` با ویژگی `HttpGet`  بدون عدم موفقیت قبلی فراخوانی شود، این پارامتر `false` است. هنگامی که با متد `Delete` با ویژگی `HttpPost`  در پاسخ به خطای به روز رسانی پایگاه داده فراخوانی می شود، پارامتر `true` است و یک پیام خطا به view ارسال می شود.
 
 
+2. متد اکشن `Delete` با ویژگی HttpPost (با نام `DeleteConfirmed`) را با کد زیر جایگزین کنید، که عملیات delete واقعی را انجام می دهد و هر گونه خطای به روز رسانی پایگاه داده را می گیرد.
 
+
+```C#
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Delete(int id)
+{
+    try
+    {
+        Student student = db.Students.Find(id);
+        db.Students.Remove(student);
+        db.SaveChanges();
+    }
+    catch (DataException/* dex */)
+    {
+        //Log the error (uncomment dex variable name and add a line here to write a log.
+        return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+    }
+    return RedirectToAction("Index");
+}
+```
+این کد موجودیت انتخاب شده را پیدا می کند، سپس متد Remove را فراخوانی می کند تا وضعیت موجودیت را روی `Deleted` تنظیم کند. هنگامی که SaveChanges فراخوانی می شود، یک دستور SQL `DELETE` تولید می شود. شما همچنین نام متد اکشن را از DeleteConfirmed به Delete تغییر داده اید.
+ کد scaffolded نام متد HttpPost Delete را DeleteConfirmed به متد HttpPost یک امضای منحصر به فرد میدهد. (CLR به متدهای overload  شده نیاز دارد تا پارامترهای متد متفاوتی داشته باشند.)
+ اکنون که امضاها منحصر به فرد هستند، می توانید از قرارداد MVC استفاده کنید و از همان نام برای متدهای HttpPost و HttpGet delete استفاده کنید.
+
+ اگر بهبود عملکرد در یک برنامه با حجم بالا در اولویت است، می‌توانید با جایگزین کردن خطوط کدی که متدهای `Find` and `Remove` را فراخوانی می‌کنند با کد زیر از درخواست SQL غیرضروری برای بازیابی ردیف جلوگیری کنید:
+
+ ```C#
+
+ Student studentToDelete = new Student() { ID = id };
+ db.Entry(studentToDelete).State = EntityState.Deleted;
+```
+این کد یک موجودیت `Student` را فقط با استفاده از مقدار کلید اصلی نمونه‌سازی می‌کند و سپس وضعیت موجودیت را روی `Deleted` تنظیم می‌کند. این تمام چیزی است که Entity Framework برای حذف نیاز دارد.
+
+همانطور که اشاره شد، متد Delete  با ویژگی HttpGet داده ها را حذف نمی کند. انجام یک عملیات delete در پاسخ به درخواست GET (یا انجام هر گونه عملیات ویرایش، عملیات ایجاد یا هر عملیات دیگری که داده ها را تغییر می دهد) یک خطر امنیتی ایجاد می کند. برای اطلاعات بیشتر، به [ASP.NET MVC Tip 46 — Don't use delinks because they create security holes] (http://stephenwalther.com/blog/archive/2009/01/21/asp.net-mvc-tip-46-ndash-donrsquot-use-delete-links-because.aspx)  در وبلاگ استفان والتر مراجعه کنید.
+
+3. در Views\Student\Delete.cshtml، یک پیام خطا بین عنوان h2 و عنوان h3 اضافه کنید، همانطور که در مثال زیر نشان داده شده است:
+
+```C#
+
+<h2>Delete</h2>
+<p class="error">@ViewBag.ErrorMessage</p>
+<h3>Are you sure you want to delete this?</h3>
+```
+
+4. صفحه را استارت برنامه،  اجرا کنید انتخاب تب **Students** و سپس کلیک کردن روی یک لینک **Delete**.
+
+
+5. در صفحه ای که می گوید **آیا مطمئن هستید که می خواهید این را حذف کنید**، گزینه **Delete** را انتخاب کنید.
+
+صفحه Index بدون دانش آموز حذف شده نمایش داده می شود. (نمونه ای از کد رسیدگی به خطا را در (https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/handling-concurrency-with-the-entity-framework-in-an-asp-net-mvc-application)[concurrency tutorial] مشاهده خواهید کرد.)
 
 
 ## بستن کانکشن دیتابیس
