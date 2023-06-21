@@ -477,7 +477,7 @@ namespace ContosoUniversity.DAL
 کانکشن استرینگ که اضافه کرده اید مشخص می کند که Entity Framework از دیتابیس LocalDB به نام ContosoUniversity1.mdf استفاده می کند. (دیتابیس هنوز وجود ندارد اما EF آن را ایجاد می کند.) اگر می خواهید دیتابیس را در پوشه App_Data خود ایجاد کنید، می توانید `AttachDBFilename=|DataDirectory|\ContosoUniversity1.mdf` را به کانکشن استرینگ اضافه کنید. برای اطلاعات بیشتر در مورد رشته های اتصال، [رشته های اتصال سرور SQL برای برنامه های وب ASP.NET](https://learn.microsoft.com/en-us/previous-versions/aspnet/jj653752(v=vs.110)) را ببینید.
 
 
-شما در واقع به یک کانکشن استرینگ در فایل Web.config نیاز ندارید. اگر رشته اتصال ارائه نمی کنید، Entity Framework از یک رشته اتصال پیش فرض بر اساس کلاس زمینه شما استفاده می کند.
+شما در واقع به یک کانکشن استرینگ در فایل Web.config نیاز ندارید. اگر رشته اتصال ارائه نمی کنید، Entity Framework از یک رشته اتصال پیش فرض بر اساس کلاس کانتکست شما استفاده می کند.
 
 
 ## ایجاد controller و views
