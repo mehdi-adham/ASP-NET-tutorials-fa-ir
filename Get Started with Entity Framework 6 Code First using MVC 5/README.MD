@@ -1,4 +1,4 @@
-# با Entity Framework 6 Code First با استفاده از MVC 5
+# با روش Entity Framework 6 Code First با استفاده از MVC 5
 
 ## ایجاد  یک برنامه MVC web
 
