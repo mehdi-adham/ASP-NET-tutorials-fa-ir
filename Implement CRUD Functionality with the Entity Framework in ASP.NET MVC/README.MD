@@ -422,10 +422,11 @@ public ActionResult Delete(int id)
 <h3>Are you sure you want to delete this?</h3>
 ```
 
-4. صفحه را استارت برنامه،  اجرا کنید انتخاب تب **Students** و سپس کلیک کردن روی یک لینک **Delete**.
+4. صفحه را استارت برنامه،  اجرا کنید انتخاب تب **Students** و سپس کلیک کردن روی یک لینک **Delete**
 
 
-5. در صفحه ای که می گوید **آیا مطمئن هستید که می خواهید این را حذف کنید**، گزینه **Delete** را انتخاب کنید.
+5. در صفحه ای که می گوید **آیا مطمئن هستید که می خواهید این را حذف کنید**، گزینه **Delete** را انتخاب کنید
+
 
 صفحه Index بدون دانش آموز حذف شده نمایش داده می شود. (نمونه ای از کد رسیدگی به خطا را در [concurrency tutorial](https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/handling-concurrency-with-the-entity-framework-in-an-asp-net-mvc-application) مشاهده خواهید کرد.)
 
