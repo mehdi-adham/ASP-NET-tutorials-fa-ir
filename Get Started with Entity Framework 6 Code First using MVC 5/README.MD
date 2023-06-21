@@ -1,27 +1,318 @@
 # با روش Entity Framework 6 Code First با استفاده از MVC 5
 
+
+**نکته**
+
+برای توسعه جدید، ASP.NET Core Razor Pages را به کنترلرها  و view های ASP.NET MVC توصیه می کنیم. برای یک سری آموزش مشابه با استفاده از Razor Pages، به Tutorial: Get start with Razor Pages in ASP.NET Core مراجعه کنید. آموزش جدید:
+
+- دنبال کردنش راحت تره
+- از پرس و جوهای کارآمدتر استفاده می کند.
+- با آخرین API به روزتر است.
+- ویژگی های بیشتری را پوشش می دهد.
+- رویکرد ارجح برای توسعه اپلیکیشن جدید است.
+
+
+در این سری از آموزش ها، یاد می گیرید که چگونه یک برنامه ASP.NET MVC 5 بسازید که از Entity Framework 6 برای دسترسی به داده ها استفاده می کند. این آموزش از گردش کار Code First استفاده می کند. برای اطلاعات در مورد نحوه انتخاب بین Code First، Database First، و Model First، به  [ایجاد مدل](https://learn.microsoft.com/en-us/ef/ef6/modeling/) مراجعه کنید.
+
+
+این مجموعه آموزشی نحوه ساختن اپلیکیشن نمونه دانشگاه Contoso را توضیح می دهد. نمونه اپلیکیشن یک وب سایت ساده دانشگاهی است. با آن می توانید اطلاعات دانش آموز، دوره و مدرس را مشاهده و به روز کنید.
+
+در این آموزش شما:
+
+- یک برنامه وب MVC ایجاد میکنید
+- استایل سایت را تنظیم میکنید
+- فریموورک Entity Framework 6 را نصب میکنید
+- مدل داده را ایجاد میکنید
+- کتنتکست پایگاه داده را ایجاد میکنید
+- DB را با داده های آزمایشی مقداردهی اولیه میکنید
+- فریموورک EF 6 را برای استفاده از LocalDB تنظیم میکنید
+- کنترلرهاو view ها را ایجاد میکنید
+- مشاهده پایگاه داده
+
 ## ایجاد  یک برنامه MVC web
 
-<h2 dir="rtl">
-Entity Framework 6 را نصب کنید
-</h2>
+1. Visual Studio را باز کنید و با استفاده از قالب (تمپلیت) ASP.NET Web Application (NET Framework) یک پروژه وب سی شارپ ایجاد کنید. نام پروژه را ContosoUniversity گذاشته و OK را انتخاب کنید.
+
+![new-project-dialog](new-project-dialog.png)
+
+2. در New ASP.NET Web Application - ContosoUniversity، انتخاب کنید MVC را
+
+![new-web-app-dialog](new-web-app-dialog.png)
+
+**توجه داشته باشید**
+
+به طور پیش فرض، گزینه Authentication روی No Authentication تنظیم شده است. برای این آموزش، برنامه وب نیازی به ورود کاربران به سیستم ندارد. همچنین دسترسی را بر اساس افرادی که وارد سیستم شده اند محدود نمی کند.
+
+3. برای ایجاد پروژه، OK را انتخاب کنید.
+
+
+
 
 ## تنظیم استایل سایت
 
+چند تغییر ساده منوی سایت، طرح بندی و صفحه اصلی را تنظیم می کند.
+
+1. فایل `Views\Shared\_Layout.cshtml` را باز کنید و تغییرات زیر را اعمال کنید:
+
+- هر یک از موارد "My ASP.NET Application" و "Application name" را به "Contoso University" تغییر دهید.
+- ورودی های منو برای Students،  Courses، Instructors و  Departments اضافه کنید و ورودی تماس را حذف کنید.
+
+```C#
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Contoso University</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Contoso University", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@Html.ActionLink("Students", "Index", "Student")</li>
+                        <li>@Html.ActionLink("Courses", "Index", "Course")</li>
+                        <li>@Html.ActionLink("Instructors", "Index", "Instructor")</li>
+                        <li>@Html.ActionLink("Departments", "Index", "Department")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Contoso University</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+```
+
+2. در Views\Home\Index.cshtml، محتوای فایل را با کد زیر جایگزین کنید تا متن مربوط به ASP.NET و MVC با متن مربوط به این برنامه جایگزین شود:
+
+```C#
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Contoso University</h1>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h2>Welcome to Contoso University</h2>
+        <p>Contoso University is a sample application that
+        demonstrates how to use Entity Framework 6 in an 
+        ASP.NET MVC 5 web application.</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Build it from scratch</h2>
+        <p>You can build the application by following the steps in the tutorial series on the ASP.NET site.</p>
+        <p><a class="btn btn-default" href="http://www.asp.net/mvc/tutorials/getting-started-with-ef-using-mvc/">See the tutorial &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Download it</h2>
+        <p>You can download the completed project.</p>
+        <p><a class="btn btn-default" href="https://webpifeed.blob.core.windows.net/webpifeed/Partners/ASP.NET%20MVC%20Application%20Using%20Entity%20Framework%20Code%20First.zip">Download &raquo;</a></p>
+    </div>
+</div>
+```
+
+3. Ctrl+F5 را فشار دهید تا وب سایت اجرا شود. صفحه اصلی را با منوی اصلی مشاهده می کنید.
+
+
+## نصب فریموورک Entity Framework 6 
+
+1. از منوی **Tools**، **NuGet Package Manager** و سپس **Package Manager Console** را انتخاب کنید.
+
+2. در پنجره **Package Manager Console** دستور زیر را وارد کنید:
+
+
+```text
+
+Install-Package EntityFramework
+```
+
+این مرحله یکی از معدود مراحلی است که در این آموزش به شما می‌دهد که به صورت دستی انجام دهید، اما می‌توانست توسط ویژگی ASP.NET MVC scaffolding به طور خودکار انجام شود. شما آنها را به صورت دستی انجام می دهید تا بتوانید مراحل مورد نیاز برای استفاده از Entity Framework (EF) را مشاهده کنید. بعداً از scaffolding برای ایجاد کنترلر و view های MVC  استفاده خواهید کرد. یک جایگزین این است که اجازه دهید scaffolding به طور خودکار بسته EF NuGet را نصب کند، کلاس کانتکست دیتابیس را ایجاد کند و رشته اتصال را ایجاد کند. وقتی آماده انجام این کار هستید، تنها کاری که باید انجام دهید این است که این مراحل را رد کنید و بعد از ایجاد کلاس های موجودیت خود، کنترلر MVC خود را scaffold کنید.
+
+
+
 ## ایجاد data model
+
+در مرحله بعد، کلاس‌های موجودیت ها را برای برنامه دانشگاه Contoso ایجاد می‌کنیم. با سه موجودیت زیر شروع خواهید کرد:
+
+**Course <-> Enrollment <-> Student**
+
+| Entities | Relationship |
+| --- | --- |
+| Course to | Enrollment | One-to-many |
+|Student to Enrollment |One-to-many |
+
+یک رابطه "یک به چند" بین موجودیت های  Student و Enrollment ، و یک رابطه "یک به چند" بین  موجودیت Course و Enrollment وجود دارد. به عبارت دیگر، یک دانشجو می تواند در هر تعداد رشته ثبت نام کند و یک دوره می تواند هر تعداد دانشجو در آن ثبت نام کند.
+
+در بخش‌های بعدی، یک کلاس برای هر یک از این موجودیت‌ها ایجاد می‌کنیم.
+
 
 **نکته**
 
 اگر سعی کنید قبل از ایجاد تمام این کلاس‌های موجود، پروژه را کامپایل کنید، با خطاهای کامپایلر مواجه خواهید شد.
 
 
-## موجودیت دانشجو
 
-## موجودیت ثبت نام
+## موجودیت Student
 
-## موجودیت دوره
+- در **Solution Explorer** روی پوشه Models، کلیک راست کنید  و با انتخاب **Add** > **Class** یک فایل کلاس به نام  Student.cs ایجاد کنید. کد  template را با کد زیر جایگزین کنید:
+
+```C#
+using System;
+using System.Collections.Generic;
+
+namespace ContosoUniversity.Models
+{
+    public class Student
+    {
+        public int ID { get; set; }
+        public string LastName { get; set; }
+        public string FirstMidName { get; set; }
+        public DateTime EnrollmentDate { get; set; }
+        
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
+    }
+}
+```
+
+ویژگی `ID` تبدیل به ستون کلید اصلی جدول پایگاه داده می شود که با این کلاس مطابقت دارد. به طور پیش‌فرض، Entity Framework خاصیتی را که `ID` یا شناسه کلاس نام دارد به عنوان کلید اصلی تفسیر می‌کند.
+
+
+ویژگی Enrollments یک ویژگی  navigation است. ویژگی های Navigation دارای موجودیت های دیگری هستند که با این موجودیت مرتبط هستند. در این حالت، ویژگی Enrollments یک موجودیت دانشجویی، همه موجودیت‌های Enrollment را که به آن موجودیت دانشجویی مرتبط هستند، در خود جای می‌دهد. به عبارت دیگر، اگر یک ردیف Student داده شده در پایگاه داده دارای دو ردیف Enrollment مرتبط باشد (ردیف هایی که حاوی مقدار کلید اصلی دانشجو در ستون کلید خارجی StudentID هستند)، ویژگی navigation Enrollments آن موجودیت دانشجویی شامل آن دو موجودیت Enrollment خواهد بود.
+
+ویژگی‌های Navigation معمولاً به‌عنوان virtual تعریف می‌شوند تا بتوانند از قابلیت‌های خاصی از Entity Framework مانند lazy loading بهره ببرند. (Lazy loading بعداً در آموزش [Reading Related Data](https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/reading-related-data-with-the-entity-framework-in-an-asp-net-mvc-application) در این مجموعه توضیح داده خواهد شد.)
+
+
+اگر یک ویژگی navigation بتواند چندین موجودیت را در خود جای دهد (مانند روابط چند به چند یا یک به چند)، نوع آن باید لیستی باشد که در آن ورودی ها می توانند add، delete، و update شوند، به عنوان مثال `ICollection`.
+
+
+## موجودیت Enrollment
+
+- در فولدرModels،  کلاس Enrollment.cs را ایجاد کنید و کد موجود را با کد زیر جایگزین کنید:
+
+```C#
+
+namespace ContosoUniversity.Models
+{
+    public enum Grade
+    {
+        A, B, C, D, F
+    }
+
+    public class Enrollment
+    {
+        public int EnrollmentID { get; set; }
+        public int CourseID { get; set; }
+        public int StudentID { get; set; }
+        public Grade? Grade { get; set; }
+        
+        public virtual Course Course { get; set; }
+        public virtual Student Student { get; set; }
+    }
+}
+```
+
+ویژگی `EnrollmentID` کلید اصلی خواهد بود. این موجودیت از الگوی `ID` نام کلاس به جای `ID` به تنهایی همانطور که در موجودیت `Student` مشاهده کردید استفاده می کند. معمولاً شما یک الگو را انتخاب می کنید و از آن در مدل داده خود استفاده می کنید. در اینجا، تنوع نشان می دهد که می توانید از هر یک از الگوها استفاده کنید. در آموزش بعدی، خواهید دید که چگونه استفاده از `ID` بدون نام کلاس، پیاده سازی وراثت در مدل داده را آسان تر می کند.
+
+ویژگی `EnrollmentID` کلید اصلی خواهد بود. این موجودیت از الگوی `ID` نام کلاس به جای `ID` به تنهایی همانطور که در موجودیت `Student` مشاهده کردید استفاده می کند. معمولاً شما یک الگو را انتخاب می کنید و از آن دردیتامدل خود استفاده می کنید. در اینجا، تنوع نشان می دهد که می توانید از هر یک از الگوها استفاده کنید. در آموزش بعدی، خواهید دید که چگونه استفاده از `ID` بدون نام کلاس، پیاده سازی وراثت در دیتامدل را آسان تر می کند.
+
+ویژگی `Grade` یک enum است. علامت سوال بعد از اعلان نوع `Grade` نشان می دهد که خاصیت `Grade` می تواند null باشد. نمره null با نمره صفر متفاوت است null به این معنی است که یک نمره مشخص نیست یا هنوز به آن اختصاص داده نشده است.
+
+ویژگی `StudentID` یک کلید خارجی است و ویژگی `navigation` مربوطه `Student` است. یک موجودیت `Enrollment` با یک موجودیت دانشجویی مرتبط است، بنابراین موجودیت فقط می‌تواند یک موجودیت دانشجویی واحد داشته باشد (برخلاف `Student.Enrollments`
+ویژگی `navigation` که قبلاً دیدید، که می توانست چندین موجودیت `Enrollments` را در خود جای دهد).
+
+ویژگی `CourseID` یک کلید خارجی است و ویژگی `navigation` مربوطه `Course` است. و موجودیت `Enrollment` با یک موجودیت `Course` مرتبط است.
+
+فریموورک Entity Framework یک ویژگی را به عنوان یک ویژگی کلید خارجی تفسیر می کند اگر نام آن ***<navigation property name>*** ***<primary key property name>*** باشد (به عنوان مثال `StudentID` برای ویژگی Student navigation زیرا کلید اصلی موجودیت Student ID است). ویژگی‌های کلید خارجی را می‌توان به سادگی  ***<primary key property name>***  نامید (برای مثال `CourseID` زیرا کلید اصلی موجودیت `Course` `CourseID` است).
+
+
+## موجودیت Course
+
+- در پوشه Models، کلاس Course.cs را ایجاد کنید و کد الگو را با کد زیر جایگزین کنید:
+
+```C#
+
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ContosoUniversity.Models
+{
+    public class Course
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int CourseID { get; set; }
+        public string Title { get; set; }
+        public int Credits { get; set; }
+        
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
+    }
+}
+```
+
+ویژگی `Enrollments` یک ویژگی navigation است. یک موجودیت `Course` می تواند به هر تعداد از موجودیت های `Enrollments`  مرتبط باشد.
+
+در آموزش بعدی در این مجموعه در مورد ویژگی DatabaseGenerated بیشتر خواهیم گفت. اساساً، این ویژگی به شما امکان می دهد کلید اصلی Course را وارد کنید تا اینکه دیتابیس آن را تولید کند.
+
 
 ## ایجاد کانتکست دیتابیس
+
+کلاس اصلی که عملکرد Entity Framework را برای یک مدل داده معین هماهنگ می کند، کلاس کانتکست دیتا بیس است. شما این کلاس را با استخراج از کلاس System.Data.Entity.DbContext ایجاد می کنید. در کد خود، مشخص می کنید که کدام موجودیت ها در دیتامدل گنجانده شده است. همچنین می توانید رفتار Entity Framework خاصی را سفارشی کنید. در این پروژه نام کلاس SchoolContext می باشد.
+
+
+- برای ایجاد یک پوشه در پروژه ContosoUniversity، روی پروژه در **Solution Explorer** کلیک راست کرده و روی **Add** کلیک کنید و سپس روی **New Folder** کلیک کنید. نام پوشه جدید را DAL (برای لایه دسترسی به داده) بگذارید. در آن پوشه، یک فایل کلاس جدید با نام SchoolContext.cs ایجاد کنید و کد قالب (تمپلیت) را با کد زیر جایگزین کنید:
+
+```C#
+
+using ContosoUniversity.Models;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+
+namespace ContosoUniversity.DAL
+{
+    public class SchoolContext : DbContext
+    {
+    
+        public SchoolContext() : base("SchoolContext")
+        {
+        }
+        
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Course> Courses { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        }
+    }
+}
+```
 
 ## مشخص کردن مجموعه های موجودیت
 
