@@ -35,7 +35,7 @@
 
 ![new-project-dialog](new-project-dialog.png)
 
-2. در New ASP.NET Web Application - ContosoUniversity، انتخاب کنید MVC را
+2. In New ASP.NET Web Application - ContosoUniversity, select the MVC option.
 
 ![new-web-app-dialog](new-web-app-dialog.png)
 
@@ -345,6 +345,113 @@ public SchoolContext() : base("SchoolContext")
 
 
 ##  مقداردهی DB  با دیتاهای آزمایشی
+
+فریموورک Entity Framework می‌تواند به‌طور خودکار هنگام اجرای برنامه، یک پایگاه داده برای شما ایجاد کند (یا رها کند و دوباره ایجاد کند). می توانید مشخص کنید که این کار باید هر بار که برنامه شما اجرا می شود یا فقط زمانی که مدل با پایگاه داده موجود هماهنگ نیست انجام شود. همچنین می توانید یک متد `Seed` بنویسید که Entity Framework به طور خودکار پس از ایجاد پایگاه داده فراخوانی می کند تا آن را با داده های آزمایشی پر کند.
+
+رفتار پیش‌فرض این است که یک دیتابیس را فقط در صورتی ایجاد کنیم که وجود نداشته باشد (و اگر مدل تغییر کرده باشد و دیتابیس از قبل وجود داشته باشد، یک استثنا ایجاد کنیم). در این بخش، مشخص می‌کنید که هر زمان که مدل تغییر کرد، دیتابیس حذف شود و دوباره ایجاد شود. حذف پایگاه داده باعث از بین رفتن تمام داده های شما می شود. این به طور کلی در طول توسعه اشکالی ندارد، زیرا متد `Seed` زمانی که دیتابیس دوباره ایجاد می شود اجرا می شود و داده های آزمایشی شما را دوباره ایجاد می کند. اما در محصول معمولاً نمی خواهید همه داده های خود را هر بار که نیاز به تغییر طرح دیتابیس دارید از دست بدهید. بعداً خواهید دید که چگونه با استفاده از Code First Migrations برای تغییر طرح دیتابیس به جای حذف و ایجاد مجدد پایگاه داده، تغییرات مدل را مدیریت کنید.
+
+1. در پوشه DAL، یک فایل کلاس جدید با نام SchoolInitializer.cs ایجاد کنید و کد قالب (تمپلیت) را با کد زیر جایگزین کنید، که باعث می شود در صورت نیاز یک پایگاه داده ایجاد شود و داده های آزمایشی در پایگاه داده جدید بارگذاری شود.
+
+```C#
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Data.Entity;
+using ContosoUniversity.Models;
+
+namespace ContosoUniversity.DAL
+{
+    public class SchoolInitializer : System.Data.Entity. DropCreateDatabaseIfModelChanges<SchoolContext>
+    {
+        protected override void Seed(SchoolContext context)
+        {
+            var students = new List<Student>
+            {
+            new Student{FirstMidName="Carson",LastName="Alexander",EnrollmentDate=DateTime.Parse("2005-09-01")},
+            new Student{FirstMidName="Meredith",LastName="Alonso",EnrollmentDate=DateTime.Parse("2002-09-01")},
+            new Student{FirstMidName="Arturo",LastName="Anand",EnrollmentDate=DateTime.Parse("2003-09-01")},
+            new Student{FirstMidName="Gytis",LastName="Barzdukas",EnrollmentDate=DateTime.Parse("2002-09-01")},
+            new Student{FirstMidName="Yan",LastName="Li",EnrollmentDate=DateTime.Parse("2002-09-01")},
+            new Student{FirstMidName="Peggy",LastName="Justice",EnrollmentDate=DateTime.Parse("2001-09-01")},
+            new Student{FirstMidName="Laura",LastName="Norman",EnrollmentDate=DateTime.Parse("2003-09-01")},
+            new Student{FirstMidName="Nino",LastName="Olivetto",EnrollmentDate=DateTime.Parse("2005-09-01")}
+            };
+
+            students.ForEach(s => context.Students.Add(s));
+            context.SaveChanges();
+            var courses = new List<Course>
+            {
+            new Course{CourseID=1050,Title="Chemistry",Credits=3,},
+            new Course{CourseID=4022,Title="Microeconomics",Credits=3,},
+            new Course{CourseID=4041,Title="Macroeconomics",Credits=3,},
+            new Course{CourseID=1045,Title="Calculus",Credits=4,},
+            new Course{CourseID=3141,Title="Trigonometry",Credits=4,},
+            new Course{CourseID=2021,Title="Composition",Credits=3,},
+            new Course{CourseID=2042,Title="Literature",Credits=4,}
+            };
+            courses.ForEach(s => context.Courses.Add(s));
+            context.SaveChanges();
+            var enrollments = new List<Enrollment>
+            {
+            new Enrollment{StudentID=1,CourseID=1050,Grade=Grade.A},
+            new Enrollment{StudentID=1,CourseID=4022,Grade=Grade.C},
+            new Enrollment{StudentID=1,CourseID=4041,Grade=Grade.B},
+            new Enrollment{StudentID=2,CourseID=1045,Grade=Grade.B},
+            new Enrollment{StudentID=2,CourseID=3141,Grade=Grade.F},
+            new Enrollment{StudentID=2,CourseID=2021,Grade=Grade.F},
+            new Enrollment{StudentID=3,CourseID=1050},
+            new Enrollment{StudentID=4,CourseID=1050,},
+            new Enrollment{StudentID=4,CourseID=4022,Grade=Grade.F},
+            new Enrollment{StudentID=5,CourseID=4041,Grade=Grade.C},
+            new Enrollment{StudentID=6,CourseID=1045},
+            new Enrollment{StudentID=7,CourseID=3141,Grade=Grade.A},
+            };
+            enrollments.ForEach(s => context.Enrollments.Add(s));
+            context.SaveChanges();
+        }
+    }
+}
+```
+
+متد `Seed` شیء کانتکست دیتابیس را به عنوان پارامتر ورودی می گیرد و کد موجود در متد از آن شی برای افزودن موجودیت های جدید به دیتابیس استفاده می کند. برای هر نوع موجودیت، کد مجموعه ای از موجودیت های جدید ایجاد می کند، آنها را به ویژگی `DbSet` مناسب اضافه می کند و سپس تغییرات را در دیتابیس ذخیره می کند. لازم نیست متد `SaveChanges` را بعد از هر گروه از موجودیت ها فراخوانی کنید، همانطور که در اینجا انجام می شود، اما انجام این کار به شما کمک می کند تا منبع یک مشکل را پیدا کنید، اگر در حین نوشتن کد در دیتابیس، استثنا رخ داد.
+
+2. برای اینکه به Entity Framework بگویید از کلاس Initializer شما استفاده کند، یک عنصر به عنصر `entityFramework` در فایل ***Web.config*** برنامه (یکی که در پوشه اصلی پروژه است) اضافه کنید، همانطور که در مثال زیر نشان داده شده است:
+
+
+```C#
+
+<entityFramework>
+
+  <contexts>
+    <context type="ContosoUniversity.DAL.SchoolContext, ContosoUniversity">
+      <databaseInitializer type="ContosoUniversity.DAL.SchoolInitializer, ContosoUniversity" />
+    </context>
+  </contexts>
+
+  <defaultConnectionFactory type="System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework">
+    <parameters>
+      <parameter value="v11.0" />
+    </parameters>
+  </defaultConnectionFactory>
+  <providers>
+    <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+  </providers>
+</entityFramework>
+```
+
+نوع `context type` نام کلاس context کاملاً واجد شرایط و اسمبلی که در آن قرار دارد را مشخص می کند و نوع `databaseinitializer` نام کاملاً واجد شرایط کلاس initializer و مجموعه ای را که در آن قرار دارد را مشخص می کند. (زمانی که نمی خواهید EF از initializer استفاده کند، می توانید یک ویژگی را روی عنصر `context` تنظیم کنید: `disableDatabaseInitialization="true"`.) برای اطلاعات بیشتر، [تنظیمات فایل پیکربندی](https://learn.microsoft.com/en-us/ef/ef6/fundamentals/configuring/config-file) را ببینید.
+
+یک جایگزین برای تنظیم _initializer در فایل Web.config این است که آن را در کد با افزودن یک عبارت Database.SetInitializer به متد Application_Start در فایل Global.asax.cs انجام دهید. برای اطلاعات بیشتر، ابتدا به [Understanding Database Initializers in Entity Framework Code First.](http://www.codeguru.com/csharp/article.php/c19999/Understanding-Database-Initializers-in-Entity-Framework-Code-First.htm) مراجعه کنید.
+
+
+اکنون برنامه به گونه ای تنظیم شده است که وقتی برای اولین بار در یک اجرای معین از برنامه به پایگاه داده دسترسی پیدا می کنید، Entity Framework پایگاه داده را با مدل (کلاس های `SchoolContext` و entity شما) مقایسه می کند. اگر تفاوتی وجود داشته باشد، برنامه حذف می شود و پایگاه داده را دوباره ایجاد می کند.
+
+**توجه داشته باشید**
+
+هنگامی که یک برنامه کاربردی را در یک وب سرور مستقر می کنید، باید کدی را که حذف می شود و پایگاه داده را دوباره ایجاد می کند، حذف یا غیرفعال کنید. این کار را در آموزش بعدی این مجموعه انجام خواهید داد.
+
 
 ## تنظیم EF 6 برای استفاده از LocalDB
 
