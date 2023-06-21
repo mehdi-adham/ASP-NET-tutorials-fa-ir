@@ -31,7 +31,7 @@
 
 ## ایجاد  یک برنامه MVC web
 
-1. Visual Studio را باز کنید و با استفاده از قالب (تمپلیت) ASP.NET Web Application (NET Framework) یک پروژه وب سی شارپ ایجاد کنید. نام پروژه را ContosoUniversity گذاشته و OK را انتخاب کنید.
+1. ویژوال استودیو را باز کنید و با استفاده از قالب (تمپلیت) ASP.NET Web Application (NET Framework) یک پروژه وب سی شارپ ایجاد کنید. نام پروژه را ContosoUniversity گذاشته و OK را انتخاب کنید.
 
 ![new-project-dialog](new-project-dialog.png)
 
