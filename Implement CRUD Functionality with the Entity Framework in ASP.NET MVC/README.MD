@@ -459,3 +459,6 @@ protected override void Dispose(bool disposing)
 
 
 اکنون مجموعه کاملی از صفحات دارید که عملیات ساده CRUD را برای Student entities انجام می دهند. شما از MVC  helpers برای تولید عناصر UI برای فیلدهای داده استفاده کردید.
+
+**Source :**
+[Tutorial: Implement CRUD Functionality with the Entity Framework in ASP.NET MVC](https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/implementing-basic-crud-functionality-with-the-entity-framework-in-asp-net-mvc-application)
