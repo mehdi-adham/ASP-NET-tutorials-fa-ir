@@ -477,10 +477,91 @@ namespace ContosoUniversity.DAL
 کانکشن استرینگ که اضافه کرده اید مشخص می کند که Entity Framework از دیتابیس LocalDB به نام ContosoUniversity1.mdf استفاده می کند. (دیتابیس هنوز وجود ندارد اما EF آن را ایجاد می کند.) اگر می خواهید دیتابیس را در پوشه App_Data خود ایجاد کنید، می توانید `AttachDBFilename=|DataDirectory|\ContosoUniversity1.mdf` را به کانکشن استرینگ اضافه کنید. برای اطلاعات بیشتر در مورد رشته های اتصال، [رشته های اتصال سرور SQL برای برنامه های وب ASP.NET](https://learn.microsoft.com/en-us/previous-versions/aspnet/jj653752(v=vs.110)) را ببینید.
 
 
-شما در واقع به یک کانکشن استرینگ در فایل Web.config نیاز ندارید. اگر رشته اتصال ارائه نمی کنید، Entity Framework از یک رشته اتصال پیش فرض بر اساس کلاس کانتکست شما استفاده می کند.
+شما در واقع به یک کانکشن استرینگ در فایل Web.config نیاز ندارید. اگر کانکشن استرینگ ارائه نمی کنید، Entity Framework از یک کانکشن استرینگ پیش فرض بر اساس کلاس کانتکست شما استفاده می کند.
 
 
 ## ایجاد controller و views
+
+اکنون یک صفحه وب برای نمایش داده ها ایجاد خواهید کرد. فرآیند درخواست داده ها به طور خودکار باعث ایجاد دیتابیس می شود. شما با ایجاد یک کنترلر جدید شروع خواهید کرد. اما قبل از انجام این کار، پروژه را بیلد کنید تا کلاس‌های مدل و کانتکست را برای کنترلر MVC  scaffolding در دسترس قرار دهید.
+
+1. روی پوشه **Controllers** در **Solution Explorer** کلیک راست کنید، **Add** را انتخاب کنید و سپس **New Scaffolded Item** را کلیک کنید.
+
+2. در کادر محاوره‌ای  **Add Scaffold**، گزینه **MVC 5 Controller with views using Entity Framework** را انتخاب کنید و سپس Add را انتخاب کنید.
+
+![add-scaffold](add-scaffold.png)
+
+3. در کادر محاوره ای `Add Controller`، گزینه های زیر را انجام دهید و سپس `Add` را انتخاب کنید:
+
+- مدل کلاس: **Student (ContosoUniversity.Models)**. (اگر این گزینه را در لیست کشویی نمی بینید، پروژه را بسازید و دوباره امتحان کنید.)
+- کلاس دیتاکانتکست: **SchoolContext (ContosoUniversity.DAL)**.
+- نام کنترلر: **StudentController (Not StudentsController)**.
+- مقادیر پیش فرض را برای فیلدهای دیگر بگذارید.
+
+
+وقتی روی Add کلیک می کنید، scaffolder یک فایل StudentController.cs و مجموعه ای از view ها (فایل های cshtml) ایجاد می کند که با کنترلر کار می کنند. در آینده، وقتی پروژه‌هایی را ایجاد می‌کنید که از Entity Framework استفاده می‌کنند، می‌توانید از برخی عملکردهای اضافی scaffolder نیز استفاده کنید: اولین کلاس مدل خود را ایجاد کنید، کانکشن استرینگ ایجاد نکنید، و سپس در کادر Add Controller با انتخاب دکمه + در کنار کلاس Data context،  مشخص کنید New data context را. 
+scaffolder کلاس DbContext و کانکشن استرینگ شما و همچنین کنترلر و view ها را ایجاد می کند.
+
+4. ویژوال استودیو فایل *Controllers\StudentController.cs* را باز می کند. مشاهده می کنید که یک کلاس متغیر ایجاد شده است که یک شی دیتابیس کانتکست را نمونه سازی می کند:
+
+```C#
+
+private SchoolContext db = new SchoolContext();
+```
+
+متد اکشن `Index` با خواندن ویژگی Students نمونه دیتابیس کانتکست، لیستی از دانش آموزان را از موجودیت `Students` دریافت می کند:
+
+```C#
+
+public ViewResult Index()
+{
+    return View(db.Students.ToList());
+}
+```
+
+فایل ویو *Student\Index.cshtml* این لیست را در یک جدول نمایش می دهد:
+
+
+```c#
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstMidName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnrollmentDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstMidName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnrollmentDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+```
+
+5. برای اجرای پروژه Ctrl+F5 را فشار دهید. (اگر با خطای Cannot create Shadow Copy مواجه شدید، مرورگر را ببندید و دوباره امتحان کنید.)
+
+برای مشاهده داده های آزمایشی که روش `Seed` درج کرده است، روی تب **Students** کلیک کنید. بسته به اینکه پنجره مرورگر شما چقدر باریک باشد، پیوند تب Student را در نوار آدرس بالا می بینید یا باید روی گوشه سمت راست بالا کلیک کنید تا پیوند را ببینید.
+
+![image14](image14.png)
 
 ## مشاهده دیتابیس
 
