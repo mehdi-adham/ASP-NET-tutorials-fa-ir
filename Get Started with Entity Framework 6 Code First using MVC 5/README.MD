@@ -420,7 +420,7 @@ namespace ContosoUniversity.DAL
 2. برای اینکه به Entity Framework بگویید از کلاس Initializer شما استفاده کند، یک عنصر به عنصر `entityFramework` در فایل ***Web.config*** برنامه (یکی که در پوشه اصلی پروژه است) اضافه کنید، همانطور که در مثال زیر نشان داده شده است:
 
 
-```C#
+```xml
 
 <entityFramework>
 
@@ -461,7 +461,7 @@ namespace ContosoUniversity.DAL
 
 - در این آموزش، شما با LocalDB کار خواهید کرد. فایل Web.config برنامه را باز کنید و یک عنصر connectionStrings قبل از عنصر appSettings اضافه کنید، همانطور که در مثال زیر نشان داده شده است. (مطمئن شوید که فایل Web.config را در پوشه اصلی پروژه به روز کرده اید. همچنین یک فایل Web.config در زیر پوشه Views وجود دارد که نیازی به به روز رسانی آن ندارید.)
 
-```C#
+```xml
 
 <connectionStrings>
     <add name="SchoolContext" connectionString="Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=ContosoUniversity1;Integrated Security=SSPI;" providerName="System.Data.SqlClient"/>
