@@ -484,9 +484,9 @@ namespace ContosoUniversity.DAL
 
 اکنون یک صفحه وب برای نمایش داده ها ایجاد خواهید کرد. فرآیند درخواست داده ها به طور خودکار باعث ایجاد دیتابیس می شود. شما با ایجاد یک کنترلر جدید شروع خواهید کرد. اما قبل از انجام این کار، پروژه را بیلد کنید تا کلاس‌های مدل و کانتکست را برای کنترلر MVC  scaffolding در دسترس قرار دهید.
 
-1. روی پوشه **Controllers** در **Solution Explorer** کلیک راست کنید، **Add** را انتخاب کنید و سپس **New Scaffolded Item** را کلیک کنید
+1. روی پوشه Controllers در Solution Explorer کلیک راست کنید، Add را انتخاب کنید و سپس New Scaffolded Item را کلیک کنید
 
-2. در کادر محاوره‌ای  **Add Scaffold**، گزینه **MVC 5 Controller with views using Entity Framework** را انتخاب کنید و سپس Add را انتخاب کنید
+2. در کادر محاوره‌ای Add Scaffold، گزینه MVC 5 Controller with views using Entity Framework را انتخاب کنید و سپس Add را انتخاب کنید
 
 ![add-scaffold](add-scaffold.png)
 
