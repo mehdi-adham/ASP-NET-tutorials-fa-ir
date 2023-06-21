@@ -410,7 +410,8 @@ public ActionResult Delete(int id)
 ```
 این کد یک موجودیت `Student` را فقط با استفاده از مقدار کلید اصلی نمونه‌سازی می‌کند و سپس وضعیت موجودیت را روی `Deleted` تنظیم می‌کند. این تمام چیزی است که Entity Framework برای حذف نیاز دارد.
 
-همانطور که اشاره شد، متد Delete  با ویژگی HttpGet داده ها را حذف نمی کند. انجام یک عملیات delete در پاسخ به درخواست GET (یا انجام هر گونه عملیات ویرایش، عملیات ایجاد یا هر عملیات دیگری که داده ها را تغییر می دهد) یک خطر امنیتی ایجاد می کند. برای اطلاعات بیشتر، به [ASP.NET MVC Tip 46 — Don't use delinks because they create security holes] (http://stephenwalther.com/blog/archive/2009/01/21/asp.net-mvc-tip-46-ndash-donrsquot-use-delete-links-because.aspx)  در وبلاگ استفان والتر مراجعه کنید.
+همانطور که اشاره شد، متد Delete  با ویژگی HttpGet داده ها را حذف نمی کند. انجام یک عملیات delete در پاسخ به درخواست GET (یا انجام هر گونه عملیات ویرایش، عملیات ایجاد یا هر عملیات دیگری که داده ها را تغییر می دهد) یک خطر امنیتی ایجاد می کند. برای اطلاعات بیشتر، به [ASP.NET MVC Tip 46 — Don't use delinks because they create security holes](http://stephenwalther.com/blog/archive/2009/01/21/asp.net-mvc-tip-46-ndash-donrsquot-use-delete-links-because.aspx)   در وبلاگ استفان والتر مراجعه کنید.
+
 
 3. در Views\Student\Delete.cshtml، یک پیام خطا بین عنوان h2 و عنوان h3 اضافه کنید، همانطور که در مثال زیر نشان داده شده است:
 
@@ -426,7 +427,7 @@ public ActionResult Delete(int id)
 
 5. در صفحه ای که می گوید **آیا مطمئن هستید که می خواهید این را حذف کنید**، گزینه **Delete** را انتخاب کنید.
 
-صفحه Index بدون دانش آموز حذف شده نمایش داده می شود. (نمونه ای از کد رسیدگی به خطا را در (https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/handling-concurrency-with-the-entity-framework-in-an-asp-net-mvc-application)[concurrency tutorial] مشاهده خواهید کرد.)
+صفحه Index بدون دانش آموز حذف شده نمایش داده می شود. (نمونه ای از کد رسیدگی به خطا را در [concurrency tutorial](https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/handling-concurrency-with-the-entity-framework-in-an-asp-net-mvc-application) مشاهده خواهید کرد.)
 
 
 ## بستن کانکشن دیتابیس
