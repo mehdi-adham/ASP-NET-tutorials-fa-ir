@@ -2,9 +2,9 @@
 
 ## ایجاد  یک برنامه MVC web
 
-<div style="direction :rtl;">
-## Entity Framework 6 را نصب کنید
-</div>
+<h2 dir="rtl">
+Entity Framework 6 را نصب کنید
+</h2>
 
 ## تنظیم استایل سایت
 
